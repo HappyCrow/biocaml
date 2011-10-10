@@ -11,3 +11,8 @@ val esearch_url :
   ?reldate:int ->
   ?mindate:string -> ?maxdate:string ->
   database -> string -> string
+
+(** does not support more than 200 ids *)
+val efetch_url : 
+  ?rettype:string -> ?retmode:string ->
+  database -> string list -> string
