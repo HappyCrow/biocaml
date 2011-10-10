@@ -1,6 +1,51 @@
 open Batteries
 open Printf
 
+(* ********************************* *)
+(* Preliminary stuff for xml parsing *)
+(* ********************************* *)
+type tree = E of Xmlm.tag * tree list | D of string
+
+let in_tree i = 
+  let el tag children = E (tag, children)  in
+  let data d = D d in
+  Xmlm.input_doc_tree ~el ~data i
+
+let leaf f k = function
+    E (_,children) ->
+      List.find_map 
+	(function 
+	  | E ((tag,_), [D d]) when snd tag = k -> Some (f d)
+	  | _  -> None)
+	children
+  | _ -> raise Not_found
+
+let ileaf = leaf int_of_string
+let sleaf = leaf identity
+
+let leaves f k t = match t with
+    E (_,children) ->
+      List.filter_map 
+	(function 
+	  | E ((tag,_), [D d]) when snd tag = k -> Some (f d)
+	  | _  -> None)
+	children
+  | _ -> []
+
+let ileaves = leaves int_of_string
+let sleaves = leaves identity
+
+let child k = function
+    E (_,children) ->
+      List.find_map 
+	(function 
+	  | E ((tag,_), _) as r when snd tag = k -> Some r
+	  | _  -> None)
+	children
+  | _ -> raise Not_found
+
+
+
 (* 
    exhaustive list of databases:
    http://www.ncbi.nlm.nih.gov/books/NBK25497/table/chapter2.chapter2_table1/?report=objectonly 
@@ -55,6 +100,40 @@ let esearch_url ?retstart ?retmax ?rettype ?field ?datetype ?reldate ?mindate ?m
     map (fun d -> "mindate", d) mindate ;
     map (fun d -> "maxdate", d) maxdate ;
   ])
+  
+  
+
+type esearch_answer = {
+  count : int ;
+  retmax : int ;
+  retstart : int ;
+  ids : string list
+}
+
+let esearch_answer_of_tree = function 
+  | E (((_,"eSearchResult"),_),_) as t -> {
+      count = ileaf "count" t ;
+      retmax = ileaf "retmax" t ;
+      retstart = ileaf "retstart" t ;
+      ids = child "IdList" t |> sleaves "Id"
+    }
+  | _ -> assert false
+
+let esearch_answer_of_string str = 
+  Xmlm.make_input (`String (0,str))
+  |> in_tree 
+  |> snd
+  |> esearch_answer_of_tree
+
+
+
+
+
+
+
+
+
+
 
 
 let fetch_base_url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
@@ -66,5 +145,3 @@ let efetch_url ?rettype ?retmode database ids =
     map (fun d -> "rettype", d) rettype ;
     map (fun d -> "retmode", d) retmode ;
   ])
-  
-  

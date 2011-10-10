@@ -36,7 +36,6 @@ type database = [
 *)
 
 
-
 val esearch_url : 
   ?retstart:int -> ?retmax:int -> 
   ?rettype:[`uilist | `count] -> 
@@ -46,6 +45,18 @@ val esearch_url :
   ?mindate:string -> ?maxdate:string ->
   database -> string -> string
 (** Construction of esearch URLs. *)
+
+type esearch_answer = {
+  count : int ;
+  retmax : int ;
+  retstart : int ;
+  ids : string list
+}
+(** Represents the result of a request to esearch *)
+
+val esearch_answer_of_string : string -> esearch_answer
+(** Parses an answer of esearch under XML format *)
+
 
 val efetch_url : 
   ?rettype:string -> ?retmode:string ->
