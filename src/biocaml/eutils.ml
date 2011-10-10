@@ -6,13 +6,29 @@ open Printf
    http://www.ncbi.nlm.nih.gov/books/NBK25497/table/chapter2.chapter2_table1/?report=objectonly 
 *)
 type database = [
-  `pubmed
 | `gene
+| `genome
+| `geodatasets
+| `geoprofiles
+| `protein
+| `pubmed
+| `pubmedcentral
+| `sra
+| `unigene
+| `taxonomy
 ]
 
 let id_of_database = function
   | `pubmed -> "pubmed"
   | `gene -> "gene"
+  | `unigene -> "unigene"
+  | `genome -> "genome"
+  | `geoprofiles -> "geoprofiles"
+  | `geodatasets -> "geodatasets"
+  | `pubmedcentral -> "pmc"
+  | `protein -> "protein"
+  | `sra -> "sra"
+  | `taxonomy -> "taxonomy"
 
 let search_base_url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 

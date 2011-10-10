@@ -16,8 +16,16 @@
 *)
 
 type database = [
-  `pubmed
 | `gene
+| `genome
+| `geodatasets
+| `geoprofiles
+| `protein
+| `pubmed
+| `pubmedcentral
+| `sra
+| `unigene
+| `taxonomy
 ]
 (** Represents available databases *)
 
