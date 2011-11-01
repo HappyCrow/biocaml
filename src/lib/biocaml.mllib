@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 25fc2f647725cd3f651a44b97a0a0c28)
+# DO NOT EDIT (digest: aa42e2417b5b2835f4906c5bafd919f6)
 Biocaml
 Biocaml_msg
 Biocaml_pos
@@ -12,6 +12,7 @@ Biocaml_cel
 Biocaml_chrName
 Biocaml_comments
 Biocaml_common
+Biocaml_eutils
 Biocaml_fasta
 Biocaml_fastq
 Biocaml_genome
